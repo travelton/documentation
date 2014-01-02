@@ -28,6 +28,12 @@ Returns a single domain, including credentials and DNS records. See examples bel
 
 .. code-block:: url
 
+     GET /domains/<domain>/ips
+
+Returns a list of IPs currently assigned to the specified domain.
+
+.. code-block:: url
+
      POST /domains
 
 Create a new domain. See examples below.
@@ -48,9 +54,25 @@ Create a new domain. See examples below.
 
 .. code-block:: url
 
+     POST /domains/<domain>/<ip>
+
+Assign an IP to the domain specified.
+
+.. note:: Please see the IP Management API to obtain a list of available IPs for your account. 
+
+.. code-block:: url
+
      DELETE /domains/<domain>
 
 Delete a domain from your account.
+
+.. code-block:: url
+
+     DELETE /domains/<domain>/<ip>
+
+Unassign an IP from the domain specified.
+
+.. warning:: A domain must have at least one IP assigned. A 400 error will be thrown if you attempt to remove the last IP from a domain.  
 
 .. note:: Mailgun imposes a rate limit for the Domains API endpoint. Users may 
 		  issue no more than 300 requests per minute, per account. See the resultant
@@ -80,6 +102,17 @@ Sample response:
 	    }
 	  ]
 	}
+
+Possible response codes:
+
+.. container:: ptable
+
+ ================= ========================================================
+ Parameter         Description
+ ================= ========================================================
+ 200               Request successful
+ 500               Internal Server Error
+ ================= ========================================================
 
 Get a single domain.
 
@@ -133,6 +166,19 @@ Sample response:
 	    }
 	  ]
 	}
+
+Possible response codes:
+
+.. container:: ptable
+
+ ================= ========================================================
+ Parameter         Description
+ ================= ========================================================
+ 200               Request successful
+ 404               Domain not found for account
+ 500               Internal Server Error
+ ================= ========================================================
+
 Adding a domain.
 
 .. include:: samples/add-domain.rst
@@ -186,7 +232,19 @@ Sample response:
 	    }
 	  ]
 	}
-	
+
+Possible response codes:
+
+.. container:: ptable
+
+ ================= ========================================================
+ Parameter         Description
+ ================= ========================================================
+ 200               Request successful
+ 400               Domain already exists within system
+ 500               Internal Server Error
+ ================= ========================================================	
+
 Deleting a domain.
 
 .. include:: samples/delete-domain.rst
@@ -198,6 +256,98 @@ Sample response:
 	{
 	  "message": "Domain has been deleted"
 	}
+
+Possible response codes:
+
+.. container:: ptable
+
+ ================= ========================================================
+ Parameter         Description
+ ================= ========================================================
+ 200               Request successful
+ 404               Domain not found for account
+ 500               Internal Server Error
+ ================= ========================================================	
+
+List all IPs for a domain.
+
+.. include:: samples/list-domain-ips.rst
+
+Sample response:
+
+.. code-block:: javascript
+
+	{
+	    "total_count": 2,
+	    "items": [
+	        "184.173.153.199",
+	        "127.0.0.2"
+	    ]
+	}
+
+Possible response codes:
+
+.. container:: ptable
+
+ ================= ========================================================
+ Parameter         Description
+ ================= ========================================================
+ 200               Request successful
+ 404               Domain not found for account
+ 500               Internal Server Error
+ ================= ========================================================	
+
+Assign an IP to a domain.
+
+.. include:: samples/assign-domain-ip.rst
+
+Sample response:
+
+.. code-block:: javascript
+
+	{
+	    "message": "IP successfully assigned to domain",
+	    "ip": "184.173.153.199"
+	}
+
+Possible response codes:
+
+.. container:: ptable
+
+ ================= ========================================================
+ Parameter         Description
+ ================= ========================================================
+ 200               Request successful
+ 400               Not a valid IP address
+ 404               Domain or IP not found for account
+ 500               Internal Server Error
+ ================= ========================================================	
+
+Unassign an IP from a domain.
+
+.. include:: samples/unassign-domain-ip.rst
+
+Sample response:
+
+.. code-block:: javascript
+
+	{
+	    "message": "IP successfully unassigned from domain",
+	    "ip": "184.173.153.199"
+	}
+
+Possible response codes:
+
+.. container:: ptable
+
+ ================= ========================================================
+ Parameter         Description
+ ================= ========================================================
+ 200               Request successful
+ 400               Not a valid IP address
+ 404               Domain or IP not found for account
+ 500               Internal Server Error
+ ================= ========================================================	
 
 Rate Limit Response:
 
